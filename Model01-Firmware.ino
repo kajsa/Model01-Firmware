@@ -6,12 +6,10 @@
 #define BUILD_INFORMATION "locally built"
 #endif
 
-
 /**
  * These #include directives pull in the Kaleidoscope firmware core,
  * as well as the Kaleidoscope plugins we use in the Model 01's firmware
  */
-
 
 // The Kaleidoscope core
 #include "Kaleidoscope.h"
@@ -24,7 +22,6 @@
 
 // Support for controlling the keyboard's LEDs
 #include "Kaleidoscope-LEDControl.h"
-#include "Kaleidoscope.h"
 
 // Support for "Numlock" mode, which is mostly just the Numlock specific LED mode
 #include "Kaleidoscope-Numlock.h"
@@ -54,62 +51,11 @@
 // Support for Keyboardio's internal keyboard testing mode
 #include "Kaleidoscope-Model01-TestMode.h"
 
-#define MACRO_VERSION_INFO 1
-#define Macro_VersionInfo M(MACRO_VERSION_INFO)
-#define MACRO_ANY 2
-#define Macro_Any M(MACRO_ANY)
-#define NUMPAD_KEYMAP 2
+// Support for OneShot modifiers...
+#include "Kaleidoscope-OneShot.h"
 
-#define GENERIC_FN2  KEYMAP_STACKED ( \
-___,     Key_F1,          Key_F2,        Key_F3,        Key_F4,        Key_F5,           Key_LEDEffectNext, \
-Key_Tab, Key_PrintScreen, Key_Insert,    Key_mouseUp,   ___,           Key_mouseWarpEnd, Key_mouseWarpNE,   \
-Key_PageUp, Key_ScrollLock, Key_mouseL,  Key_mouseDn,   Key_mouseR,    Key_mouseWarpNW,                     \
-Key_PageDown, Key_Pause,  Key_mouseBtnL, Key_mouseBtnM, Key_mouseBtnR, Key_mouseWarpSW,  Key_mouseWarpSE,   \
-Key_Delete, ___, ___, ___,  \
-            ___,   \
-\
-Consumer_ScanPreviousTrack, Key_F6,                 Key_F7,                   Key_F8,                  Key_F9,          Key_F10,          Key_F11, \
-Consumer_PlaySlashPause,    Consumer_ScanNextTrack, Key_LeftCurlyBracket,     Key_RightCurlyBracket,   Key_LeftBracket, Key_RightBracket, Key_F12, \
-                            Key_LeftArrow,          Key_DownArrow,            Key_UpArrow,             Key_RightArrow,  ___,              ___, \
-Key_PcApplication,          Key_Mute,               Consumer_VolumeDecrement, Consumer_VolumeIncrement, ___,            Key_Backslash,    Key_Pipe, \
-___, ___, ___, Key_Enter, \
-___ \
-)
-
-
-#define NUMPAD KEYMAP_STACKED  (\
-    ___, ___, ___, ___, ___, ___, ___,  \
-    ___, ___, ___, ___, ___, ___, ___,  \
-    ___, ___, ___, ___, ___, ___,       \
-    ___, ___, ___, ___, ___, ___, ___,  \
-               ___, ___, ___, ___,  \
-                 Key_Keymap1_Momentary, \
-\
-\
-    Macro_VersionInfo,  ___, Key_Keypad7, Key_Keypad8,   Key_Keypad9,        Key_KeypadSubtract, ___, \
-    ___, ___, Key_Keypad4, Key_Keypad5,   Key_Keypad6,        Key_KeypadAdd,      ___, \
-         ___, Key_Keypad1, Key_Keypad2,   Key_Keypad3,        Key_Equals,         Key_Quote, \
-    ___, ___, Key_Keypad0, Key_KeypadDot, Key_KeypadMultiply, Key_KeypadDivide,   Key_Enter, \
-    ___, ___, ___, ___, \
-    Key_Keymap1_Momentary \
-)
-
-#define QWERTY KEYMAP_STACKED ( \
-    ___,          Key_1, Key_2, Key_3, Key_4, Key_5, Key_6, \
-    Key_Backtick, Key_Q, Key_W, Key_E, Key_R, Key_T, Key_Tab,           \
-    Key_Home,   Key_A, Key_S, Key_D, Key_F, Key_G,                    \
-    Key_End, Key_Z, Key_X, Key_C, Key_V, Key_B, Key_Escape,        \
-    Key_Backspace, Key_LeftShift, Key_LeftGui, Key_LeftControl,         \
-                          Key_Keymap1_Momentary,     \
-\
-    Macro_Any,     Key_6, Key_7, Key_8,     Key_9,      Key_0,         Key_CapsLock, \
-    Key_Enter,     Key_Y, Key_U, Key_I,     Key_O,      Key_P,         Key_LeftBracket,    \
-                   Key_H, Key_J, Key_K,     Key_L,      Key_Semicolon, Key_Quote,     \
-    Key_RightAlt,  Key_N, Key_M, Key_Comma, Key_Period, Key_Slash,     Key_RightBracket,  \
-    Key_RightControl, Key_LeftAlt, Key_RightShift, Key_Spacebar,                      \
-    Key_Keymap1_Momentary \
-)
-=======
+// ... and for cancelling them
+#include "Kaleidoscope-Escape-OneShot.h"
 
 /** This 'enum' is a list of all the macros used by the Model 01's firmware
   * The names aren't particularly important. What is important is that each
@@ -127,8 +73,6 @@ ___ \
 enum { MACRO_VERSION_INFO,
        MACRO_ANY
      };
-
-
 
 /** The Model 01's key layouts are defined as 'keymaps'. By default, there are three
   * keymaps: The standard QWERTY keymap, the "Function layer" keymap and the "Numpad"
@@ -177,40 +121,38 @@ enum { QWERTY, FUNCTION, NUMPAD }; // layers
  *   so we can make the keymaps actually resemble the physical key layout better
  */
 // *INDENT-OFF*
->>>>>>> 76f5a59a7842ee9d132e82183b77ef293e2e8108
 
 const Key keymaps[][ROWS][COLS] PROGMEM = {
 
   [QWERTY] = KEYMAP_STACKED
-  (___,          Key_1, Key_2, Key_3, Key_4, Key_5, Key_LEDEffectNext,
+  (___,          Key_1, Key_2, Key_3, Key_4, Key_5, Key_6,
    Key_Backtick, Key_Q, Key_W, Key_E, Key_R, Key_T, Key_Tab,
-   Key_PageUp,   Key_A, Key_S, Key_D, Key_F, Key_G,
-   Key_PageDown, Key_Z, Key_X, Key_C, Key_V, Key_B, Key_Escape,
-   Key_LeftControl, Key_Backspace, Key_LeftGui, Key_LeftShift,
+   Key_Home,     Key_A, Key_S, Key_D, Key_F, Key_G,
+   Key_End,      Key_Z, Key_X, Key_C, Key_V, Key_B, Key_Escape,
+   Key_Backspace, OSM(LeftShift), OSM(LeftAlt), OSM(LeftControl),
    ShiftToLayer(FUNCTION),
 
-   M(MACRO_ANY),  Key_6, Key_7, Key_8,     Key_9,         Key_0,         Key_KeypadNumLock,
-   Key_Enter,     Key_Y, Key_U, Key_I,     Key_O,         Key_P,         Key_Equals,
+   M(MACRO_ANY),  Key_6, Key_7, Key_8,     Key_9,         Key_0,         Key_CapsLock,
+   Key_Enter,     Key_Y, Key_U, Key_I,     Key_O,         Key_P,         Key_LeftBracket,
                   Key_H, Key_J, Key_K,     Key_L,         Key_Semicolon, Key_Quote,
-   Key_RightAlt,  Key_N, Key_M, Key_Comma, Key_Period,    Key_Slash,     Key_Minus,
-   Key_RightShift, Key_LeftAlt, Key_Spacebar, Key_RightControl,
+   Key_RightAlt,  Key_N, Key_M, Key_Comma, Key_Period,    Key_Slash,     Key_RightBracket,
+   OSM(RightControl), OSM(LeftGui), OSM(RightShift), Key_Spacebar,
    ShiftToLayer(FUNCTION)),
 
   [FUNCTION] =  KEYMAP_STACKED
-  (___,      Key_F1,           Key_F2,      Key_F3,     Key_F4,        Key_F5,           XXX,
-   Key_Tab,  ___,              Key_mouseUp, ___,        Key_mouseBtnR, Key_mouseWarpEnd, Key_mouseWarpNE,
-   Key_Home, Key_mouseL,       Key_mouseDn, Key_mouseR, Key_mouseBtnL, Key_mouseWarpNW,
-   Key_End,  Key_PrintScreen,  Key_Insert,  ___,        Key_mouseBtnM, Key_mouseWarpSW,  Key_mouseWarpSE,
-   ___, Key_Delete, ___, ___,
+  (___,      Key_F1,           Key_F2,      Key_F3,        Key_F4,        Key_F5,           Key_LEDEffectNext,
+   Key_Tab,  Key_PrintScreen,  Key_Insert,  Key_mouseUp,   ___,           Key_mouseWarpEnd, Key_mouseWarpNE,
+   Key_PageUp, Key_mouseBtnL,  Key_mouseL,  Key_mouseDn,   Key_mouseR,    Key_mouseWarpNW,
+   Key_PageDown, Key_Pause, Key_ScrollLock, Key_mouseBtnM, Key_mouseBtnR, Key_mouseWarpSW,  Key_mouseWarpSE,
+   Key_Delete, ___, ___, ___,
    ___,
 
-   Consumer_ScanPreviousTrack, Key_F6,                 Key_F7,                   Key_F8,                   Key_F9,          Key_F10,          Key_F11,
-   Consumer_PlaySlashPause,    Consumer_ScanNextTrack, Key_LeftCurlyBracket,     Key_RightCurlyBracket,    Key_LeftBracket, Key_RightBracket, Key_F12,
-                               Key_LeftArrow,          Key_DownArrow,            Key_UpArrow,              Key_RightArrow,  ___,              ___,
-   Key_PcApplication,          Key_Mute,               Consumer_VolumeDecrement, Consumer_VolumeIncrement, ___,             Key_Backslash,    Key_Pipe,
-   ___, ___, Key_Enter, ___,
+   Consumer_ScanPreviousTrack, Key_F6,                 Key_F7,                   Key_F8,                   Key_F9,          Key_F10,          Key_KeypadNumLock,
+   Consumer_PlaySlashPause,    Consumer_ScanNextTrack, Key_LeftCurlyBracket,     Key_RightCurlyBracket,    Key_Minus,       Key_Equals,       Key_F12,
+                               ___,                    Key_LeftArrow,            Key_DownArrow,            Key_UpArrow,     Key_RightArrow,   ___,
+   Key_PcApplication,          ___,               Consumer_VolumeDecrement, Consumer_VolumeIncrement, ___,             Key_Backslash,    Key_Pipe,
+   ___, ___, ___, Key_Enter, 
    ___),
-
 
   [NUMPAD] =  KEYMAP_STACKED
   (___, ___, ___, ___, ___, ___, ___,
@@ -220,7 +162,7 @@ const Key keymaps[][ROWS][COLS] PROGMEM = {
    ___, ___, ___, ___,
    ___,
 
-   M(MACRO_VERSION_INFO),  ___, Key_Keypad7, Key_Keypad8,   Key_Keypad9,        Key_KeypadSubtract, ___,
+   M(MACRO_VERSION_INFO),  ___, Key_Keypad7, Key_Keypad8,   Key_Keypad9,        Key_KeypadSubtract, Key_KeypadNumLock,
    ___,                    ___, Key_Keypad4, Key_Keypad5,   Key_Keypad6,        Key_KeypadAdd,      ___,
                            ___, Key_Keypad1, Key_Keypad2,   Key_Keypad3,        Key_Equals,         Key_Quote,
    ___,                    ___, Key_Keypad0, Key_KeypadDot, Key_KeypadMultiply, Key_KeypadDivide,   Key_Enter,
@@ -302,15 +244,6 @@ static kaleidoscope::LEDSolidColor solidBlue(0, 70, 130);
 static kaleidoscope::LEDSolidColor solidIndigo(0, 0, 170);
 static kaleidoscope::LEDSolidColor solidViolet(130, 0, 120);
 
-const macro_t *macroAction(uint8_t macroIndex, uint8_t keyState) {
-  if (macroIndex == 1 && keyToggledOn(keyState)) {
-    Macros.type(PSTR("Keyboardio Model 01 - Kaleidoscope "));
-    Macros.type(PSTR(BUILD_INFORMATION));
-  } else if (macroIndex == MACRO_ANY) {
-    static Key lastKey;
-    if (keyToggledOn(keyState))
-      lastKey.keyCode = Key_A.keyCode + (uint8_t)(millis() % 36);
-
 
 /** The 'setup' function is one of the two standard Arduino sketch functions.
   * It's called when your keyboard first powers up. This is where you set up
@@ -351,10 +284,6 @@ void setup() {
     // The breathe effect slowly pulses all of the LEDs on your keyboard
     &LEDBreatheEffect,
 
-    // The AlphaSquare effect prints each character you type, using your
-    // keyboard's LEDs as a display
-    &AlphaSquareEffect,
-
     // The stalker effect lights up the keys you've pressed recently
     &StalkerEffect,
 
@@ -364,6 +293,8 @@ void setup() {
 
     // The macros plugin adds support for macros
     &Macros,
+    &OneShot,
+    &EscapeOneShot,
 
     // The MouseKeys plugin lets you add keys to your keymap which move the mouse.
     &MouseKeys
