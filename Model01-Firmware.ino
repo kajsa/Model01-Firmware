@@ -137,16 +137,16 @@ const Key keymaps[][ROWS][COLS] PROGMEM = {
    ShiftToLayer(FUNCTION)),
 
   [FUNCTION] =  KEYMAP_STACKED
-  (___,      Key_F1,           Key_F2,      Key_F3,        Key_F4,        Key_F5,           Key_LEDEffectNext,
-   Key_Tab,  Key_PrintScreen,  Key_Insert,  Key_mouseUp,   ___,           Key_mouseWarpEnd, Key_mouseWarpNE,
-   Key_PageUp, Key_mouseBtnL,  Key_mouseL,  Key_mouseDn,   Key_mouseR,    Key_mouseWarpNW,
-   Key_PageDown, Key_Pause, Key_ScrollLock, Key_mouseBtnM, Key_mouseBtnR, Key_mouseWarpSW,  Key_mouseWarpSE,
+  (___,      Key_F1,          Key_F2,        Key_F3,         Key_F4,        Key_F5,           Key_LEDEffectNext,
+   Key_Tab,  Key_PrintScreen, Key_Insert,    Key_UpArrow,    ___,           Key_mouseWarpEnd, Key_mouseWarpNE,
+   Key_PageUp, Key_ScrollLock, Key_LeftArrow, Key_DownArrow, Key_RightArrow, Key_mouseWarpNW,
+   Key_PageDown, Key_Pause,  Key_mouseBtnL, Key_mouseBtnM,  Key_mouseBtnR, Key_mouseWarpSW,  Key_mouseWarpSE,
    Key_Delete, ___, ___, ___,
    ___,
 
    Consumer_ScanPreviousTrack, Key_F6,                 Key_F7,                   Key_F8,                   Key_F9,          Key_F10,          Key_KeypadNumLock,
-   Consumer_PlaySlashPause,    Consumer_ScanNextTrack, Key_LeftCurlyBracket,     Key_RightCurlyBracket,    Key_Minus,       Key_Equals,       Key_F12,
-                               ___,                    Key_LeftArrow,            Key_DownArrow,            Key_UpArrow,     Key_RightArrow,   ___,
+   Consumer_PlaySlashPause,    Consumer_ScanNextTrack, Key_Minus,                Key_Plus,                 Key_Minus,       Key_Equals,       Key_F12,
+                               ___,                    Key_mouseL,            Key_mouseDn,      Key_mouseUp,      Key_mouseR,      ___,
    Key_PcApplication,          ___,                    Consumer_VolumeDecrement, Consumer_VolumeIncrement, ___,             Key_Backslash,    Key_Pipe,
    ___, ___, ___, Key_Enter, 
    ___),
@@ -268,6 +268,8 @@ void setup() {
 
     // The macros plugin adds support for macros
     &Macros,
+
+    // OneShot allows chaining of modifiers in addition to chording them
     &OneShot,
     &EscapeOneShot,
 
@@ -277,6 +279,9 @@ void setup() {
     // This makes it clear which modifiers are active
     &ActiveModColorEffect
   );
+
+  // Disable sticky one shot modifiers
+  OneShot.double_tap_sticky = false;
 
   // While we hope to improve this in the future, the NumLock plugin
   // needs to be explicitly told which keymap layer is your numpad layer
