@@ -138,9 +138,9 @@ const Key keymaps[][ROWS][COLS] PROGMEM = {
 
   [FUNCTION] =  KEYMAP_STACKED
   (___,      Key_F1,          Key_F2,        Key_F3,         Key_F4,        Key_F5,           Key_LEDEffectNext,
-   Key_Tab,  Key_PrintScreen, Key_Insert,    Key_UpArrow,    ___,           Key_mouseWarpEnd, Key_mouseWarpNE,
-   Key_PageUp, Key_ScrollLock, Key_LeftArrow, Key_DownArrow, Key_RightArrow, Key_mouseWarpNW,
-   Key_PageDown, Key_Pause,  Key_mouseBtnL, Key_mouseBtnM,  Key_mouseBtnR, Key_mouseWarpSW,  Key_mouseWarpSE,
+   Key_Tab,  Key_mouseBtnR,   Key_Insert,    Key_UpArrow,    ___,           Key_mouseWarpEnd, Key_mouseWarpNE,
+   Key_PageUp, Key_mouseBtnL, Key_LeftArrow, Key_DownArrow,  Key_RightArrow, Key_mouseWarpNW,
+   Key_PageDown, Key_mouseBtnM, Key_mouseBtnR, Key_ScrollLock, Key_Pause, Key_mouseWarpSW,  Key_mouseWarpSE,
    Key_Delete, ___, ___, ___,
    ___,
 
