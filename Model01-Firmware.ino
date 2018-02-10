@@ -23,9 +23,6 @@
 // Support for controlling the keyboard's LEDs
 #include "Kaleidoscope-LEDControl.h"
 
-// Support for "Numlock" mode, which is mostly just the Numlock specific LED mode
-#include "Kaleidoscope-Numlock.h"
-
 // Support for highlighting active modifiers.
 #include "Kaleidoscope-LED-ActiveModColor.h"
 
@@ -33,26 +30,17 @@
 // when the keyboard is connected to a computer (or that computer is powered on)
 #include "Kaleidoscope-LEDEffect-BootGreeting.h"
 
-// Support for an LED mode that makes all the LEDs 'breathe'
-#include "Kaleidoscope-LEDEffect-Breathe.h"
-
 // Support for LED modes that pulse the keyboard's LED in a rainbow pattern
 #include "Kaleidoscope-LEDEffect-Rainbow.h"
 
 // Support for an LED mode that lights up the keys as you press them
 #include "Kaleidoscope-LED-Stalker.h"
 
-// Support for an LED mode that prints the keys you press in letters 4px high
-#include "Kaleidoscope-LED-AlphaSquare.h"
-
 // Support for Keyboardio's internal keyboard testing mode
 #include "Kaleidoscope-Model01-TestMode.h"
 
 // Support for OneShot modifiers...
 #include "Kaleidoscope-OneShot.h"
-
-// ... and for cancelling them
-#include "Kaleidoscope-Escape-OneShot.h"
 
 /** This 'enum' is a list of all the macros used by the Model 01's firmware
   * The names aren't particularly important. What is important is that each
@@ -145,7 +133,7 @@ const Key keymaps[][ROWS][COLS] PROGMEM = {
    ___,
 
    Consumer_ScanPreviousTrack, Key_F6,                 Key_F7,                   Key_F8,                   Key_F9,          Key_F10,          Key_KeypadNumLock,
-   Consumer_PlaySlashPause,    Consumer_ScanNextTrack, Key_LeftCurlyBracket,     Key_RightCurlyBracket,    Key_Minus,       Key_Equals,       Key_F12,
+   Consumer_PlaySlashPause,    Consumer_ScanNextTrack, Key_Underscore,     Key_Plus,    Key_Minus,       Key_Equals,       Key_F12,
                                ___,                    Key_LeftArrow,            Key_DownArrow,            Key_UpArrow,     Key_RightArrow,   ___,
    Key_PcApplication,          ___,                    Consumer_VolumeDecrement, Consumer_VolumeIncrement, ___,             Key_Backslash,    Key_Pipe,
    ___, ___, ___, Key_Enter, 
@@ -199,7 +187,6 @@ static void anyKeyMacro(uint8_t keyState) {
     kaleidoscope::hid::pressKey(lastKey);
 }
 
-
 /** macroAction dispatches keymap events that are tied to a macro
     to that macro. It takes two uint8_t parameters.
 
@@ -248,28 +235,13 @@ void setup() {
     // LEDControl provides support for other LED modes
     &LEDControl,
 
-    // The rainbow effect changes the color of all of the keyboard's keys at the same time
-    // running through all the colors of the rainbow.
-    &LEDRainbowEffect,
-
     // The rainbow wave effect lights up your keyboard with all the colors of a rainbow
     // and slowly moves the rainbow across your keyboard
     &LEDRainbowWaveEffect,
 
-    // The breathe effect slowly pulses all of the LEDs on your keyboard
-    &LEDBreatheEffect,
-
-    // The stalker effect lights up the keys you've pressed recently
-    &StalkerEffect,
-
-    // The numlock plugin is responsible for lighting up the 'numpad' mode
-    // with a custom LED effect
-    &NumLock,
-
     // The macros plugin adds support for macros
     &Macros,
     &OneShot,
-    &EscapeOneShot,
 
     // The MouseKeys plugin lets you add keys to your keymap which move the mouse.
     &MouseKeys,
@@ -277,10 +249,6 @@ void setup() {
     // This makes it clear which modifiers are active
     &ActiveModColorEffect
   );
-
-  // While we hope to improve this in the future, the NumLock plugin
-  // needs to be explicitly told which keymap layer is your numpad layer
-  NumLock.numPadLayer = NUMPAD;
 
   // We set the brightness of the rainbow effects to 150 (on a scale of 0-255)
   // This draws more than 500mA, but looks much nicer than a dimmer effect
