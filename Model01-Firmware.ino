@@ -23,9 +23,6 @@
 // Support for controlling the keyboard's LEDs
 #include "Kaleidoscope-LEDControl.h"
 
-// Support for "Numlock" mode, which is mostly just the Numlock specific LED mode
-#include "Kaleidoscope-Numlock.h"
-
 // Support for highlighting active modifiers.
 #include "Kaleidoscope-LED-ActiveModColor.h"
 
@@ -33,26 +30,17 @@
 // when the keyboard is connected to a computer (or that computer is powered on)
 #include "Kaleidoscope-LEDEffect-BootGreeting.h"
 
-// Support for an LED mode that makes all the LEDs 'breathe'
-#include "Kaleidoscope-LEDEffect-Breathe.h"
-
 // Support for LED modes that pulse the keyboard's LED in a rainbow pattern
 #include "Kaleidoscope-LEDEffect-Rainbow.h"
 
 // Support for an LED mode that lights up the keys as you press them
 #include "Kaleidoscope-LED-Stalker.h"
 
-// Support for an LED mode that prints the keys you press in letters 4px high
-#include "Kaleidoscope-LED-AlphaSquare.h"
-
 // Support for Keyboardio's internal keyboard testing mode
 #include "Kaleidoscope-Model01-TestMode.h"
 
 // Support for OneShot modifiers...
 #include "Kaleidoscope-OneShot.h"
-
-// ... and for cancelling them
-#include "Kaleidoscope-Escape-OneShot.h"
 
 /** This 'enum' is a list of all the macros used by the Model 01's firmware
   * The names aren't particularly important. What is important is that each
@@ -112,7 +100,7 @@ enum { MACRO_VERSION_INFO,
   * the numbers 0, 1 and 2.
   */
 
-enum { QWERTY, FUNCTION, NUMPAD }; // layers
+enum { DVORAK, FUNCTION, NUMPAD, QWERTY }; // layers
 
 /* This comment temporarily turns off astyle's indent enforcement
  *   so we can make the keymaps actually resemble the physical key layout better
@@ -121,18 +109,18 @@ enum { QWERTY, FUNCTION, NUMPAD }; // layers
 
 const Key keymaps[][ROWS][COLS] PROGMEM = {
 
-  [QWERTY] = KEYMAP_STACKED
-  (___,          Key_1, Key_2, Key_3, Key_4, Key_5, Key_6,
-   Key_Backtick, Key_Q, Key_W, Key_E, Key_R, Key_T, Key_Tab,
-   Key_Home,     Key_A, Key_S, Key_D, Key_F, Key_G,
-   Key_End,      Key_Z, Key_X, Key_C, Key_V, Key_B, Key_Escape,
+  [DVORAK] = KEYMAP_STACKED
+  (___,          Key_1,         Key_2,     Key_3,      Key_4, Key_5, Key_6,
+   Key_Backtick, Key_Quote,     Key_Comma, Key_Period, Key_P, Key_Y, Key_Tab,
+   Key_PageUp,   Key_A,         Key_O,     Key_E,      Key_U, Key_I,
+   Key_PageDown, Key_Semicolon, Key_Q,     Key_J,      Key_K, Key_X, Key_Escape,
    Key_Backspace, OSM(LeftShift), OSM(LeftAlt), OSM(LeftControl),
    ShiftToLayer(FUNCTION),
 
-   M(MACRO_ANY),  Key_6, Key_7, Key_8,     Key_9,         Key_0,         Key_CapsLock,
-   Key_Enter,     Key_Y, Key_U, Key_I,     Key_O,         Key_P,         Key_LeftBracket,
-                  Key_H, Key_J, Key_K,     Key_L,         Key_Semicolon, Key_Quote,
-   Key_RightAlt,  Key_N, Key_M, Key_Comma, Key_Period,    Key_Slash,     Key_RightBracket,
+   M(MACRO_ANY),   Key_6, Key_7, Key_8, Key_9, Key_0, Key_KeypadNumLock,
+   Key_Enter,      Key_F, Key_G, Key_C, Key_R, Key_L, Key_Slash,
+                   Key_D, Key_H, Key_T, Key_N, Key_S, Key_Minus,
+   Key_RightAlt,   Key_B, Key_M, Key_W, Key_V, Key_Z, Key_Equals,
    OSM(LeftControl), OSM(LeftGui), OSM(LeftShift), Key_Spacebar,
    ShiftToLayer(FUNCTION)),
 
@@ -145,8 +133,8 @@ const Key keymaps[][ROWS][COLS] PROGMEM = {
    ___,
 
    Consumer_ScanPreviousTrack, Key_F6,                 Key_F7,                   Key_F8,                   Key_F9,          Key_F10,          Key_KeypadNumLock,
-   Consumer_PlaySlashPause,    Consumer_ScanNextTrack, Key_Minus,                Key_Plus,                 Key_Minus,       Key_Equals,       Key_F12,
-                               ___,                    Key_mouseL,            Key_mouseDn,      Key_mouseUp,      Key_mouseR,      ___,
+   Consumer_PlaySlashPause,    Consumer_ScanNextTrack, Key_LeftCurlyBracket,     Key_RightCurlyBracket,    Key_LeftBracket, Key_RightBracket, Key_F12,
+                               ___,                    Key_LeftArrow,            Key_DownArrow,            Key_UpArrow,     Key_RightArrow,   ___,
    Key_PcApplication,          ___,                    Consumer_VolumeDecrement, Consumer_VolumeIncrement, ___,             Key_Backslash,    Key_Pipe,
    ___, ___, ___, Key_Enter, 
    ___),
@@ -164,7 +152,22 @@ const Key keymaps[][ROWS][COLS] PROGMEM = {
                            ___, Key_Keypad1, Key_Keypad2,   Key_Keypad3,        Key_Equals,         Key_Quote,
    ___,                    ___, Key_Keypad0, Key_KeypadDot, Key_KeypadMultiply, Key_KeypadDivide,   Key_Enter,
    ___, ___, ___, ___,
-   ___)
+   ___),
+
+     [QWERTY] = KEYMAP_STACKED
+  (___,          Key_1, Key_2, Key_3, Key_4, Key_5, Key_6,
+   Key_Backtick, Key_Q, Key_W, Key_E, Key_R, Key_T, Key_Tab,
+   Key_Home,     Key_A, Key_S, Key_D, Key_F, Key_G,
+   Key_End,      Key_Z, Key_X, Key_C, Key_V, Key_B, Key_Escape,
+   Key_Backspace, OSM(LeftShift), OSM(LeftAlt), OSM(LeftControl),
+   ShiftToLayer(FUNCTION),
+
+   M(MACRO_ANY),  Key_6, Key_7, Key_8,     Key_9,         Key_0,         Key_CapsLock,
+   Key_Enter,     Key_Y, Key_U, Key_I,     Key_O,         Key_P,         Key_LeftBracket,
+                  Key_H, Key_J, Key_K,     Key_L,         Key_Semicolon, Key_Quote,
+   Key_RightAlt,  Key_N, Key_M, Key_Comma, Key_Period,    Key_Slash,     Key_RightBracket,
+   OSM(LeftControl), OSM(LeftGui), OSM(LeftShift), Key_Spacebar,
+   ShiftToLayer(FUNCTION))
 };
 
 /* Re-enable astyle's indent enforcement */
@@ -198,7 +201,6 @@ static void anyKeyMacro(uint8_t keyState) {
   if (keyIsPressed(keyState))
     kaleidoscope::hid::pressKey(lastKey);
 }
-
 
 /** macroAction dispatches keymap events that are tied to a macro
     to that macro. It takes two uint8_t parameters.
@@ -248,30 +250,15 @@ void setup() {
     // LEDControl provides support for other LED modes
     &LEDControl,
 
-    // The rainbow effect changes the color of all of the keyboard's keys at the same time
-    // running through all the colors of the rainbow.
-    &LEDRainbowEffect,
-
     // The rainbow wave effect lights up your keyboard with all the colors of a rainbow
     // and slowly moves the rainbow across your keyboard
     &LEDRainbowWaveEffect,
-
-    // The breathe effect slowly pulses all of the LEDs on your keyboard
-    &LEDBreatheEffect,
-
-    // The stalker effect lights up the keys you've pressed recently
-    &StalkerEffect,
-
-    // The numlock plugin is responsible for lighting up the 'numpad' mode
-    // with a custom LED effect
-    &NumLock,
 
     // The macros plugin adds support for macros
     &Macros,
 
     // OneShot allows chaining of modifiers in addition to chording them
     &OneShot,
-    &EscapeOneShot,
 
     // The MouseKeys plugin lets you add keys to your keymap which move the mouse.
     &MouseKeys,
