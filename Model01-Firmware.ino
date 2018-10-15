@@ -327,6 +327,7 @@ KALEIDOSCOPE_INIT_PLUGINS(
 
   // We start with the LED effect that turns off all the LEDs.
   LEDOff,
+  OneShot,
 
   // The rainbow effect changes the color of all of the keyboard's keys at the same time
   // running through all the colors of the rainbow.
