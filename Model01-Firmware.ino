@@ -374,7 +374,7 @@ void setup() {
   Kaleidoscope.setup();
 
   // Disable sticky one shot modifiers
-  //OneShot.double_tap_sticky = false;
+  OneShot.double_tap_sticky = false;
 
   // While we hope to improve this in the future, the NumLock plugin
   // needs to be explicitly told which keymap layer is your numpad layer
