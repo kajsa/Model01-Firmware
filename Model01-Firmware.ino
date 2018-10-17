@@ -110,32 +110,32 @@ enum { DVORAK, FUNCTION, NUMPAD, QWERTY }; // layers
 const Key keymaps[][ROWS][COLS] PROGMEM = {
 
   [DVORAK] = KEYMAP_STACKED
-  (___,          Key_1,         Key_2,     Key_3,      Key_4, Key_5, Key_6,
+  (___,          Key_1,         Key_2,     Key_3,      Key_4, Key_5, Key_LEDEffectNext,
    Key_Backtick, Key_Quote,     Key_Comma, Key_Period, Key_P, Key_Y, Key_Tab,
    Key_Home,   Key_A,         Key_O,     Key_E,      Key_U, Key_I,
    Key_End, Key_Semicolon, Key_Q,     Key_J,      Key_K, Key_X, Key_Escape,
    Key_Backspace, OSM(LeftShift), OSM(LeftGui), OSM(LeftAlt),
    ShiftToLayer(FUNCTION),
 
-   M(MACRO_ANY),   Key_6, Key_7, Key_8, Key_9, Key_0, Key_CapsLock,
-   Key_Enter,      Key_F, Key_G, Key_C, Key_R, Key_L, Key_Slash,
-                   Key_D, Key_H, Key_T, Key_N, Key_S, Key_Minus,
-   Key_RightAlt,   Key_B, Key_M, Key_W, Key_V, Key_Z, Key_Equals,
+   Key_RightAlt, Key_6, Key_7, Key_8, Key_9, Key_0, Key_CapsLock,
+   Key_Enter,    Key_F, Key_G, Key_C, Key_R, Key_L, Key_Slash,
+                 Key_D, Key_H, Key_T, Key_N, Key_S, Key_Minus,
+   Key_Enter,    Key_B, Key_M, Key_W, Key_V, Key_Z, Key_Equals,
    OSM(LeftControl), OSM(LeftGui), OSM(LeftShift), Key_Spacebar,
    ShiftToLayer(FUNCTION)),
 
   [FUNCTION] =  KEYMAP_STACKED
-  (___,      Key_F1,          Key_F2,        Key_F3,         Key_F4,        Key_F5,           Key_LEDEffectNext,
+  (___,      Key_F1,          Key_F2,        Key_F3,         Key_F4,        Key_F5,           Key_F11,
    Key_Tab,  Key_mouseBtnR,   Key_Insert,    Key_mouseUp,    ___,           Key_mouseWarpEnd, Key_mouseWarpNE,
    Key_PageUp, Key_mouseBtnL, Key_mouseL,    Key_mouseDn,    Key_mouseR,    Key_mouseWarpNW,
    Key_PageDown, Key_mouseBtnM, Key_PrintScreen, Key_ScrollLock, Key_Pause, Key_mouseWarpSW,  Key_mouseWarpSE,
    Key_Delete, ___, ___, ___,
    ___,
 
-   Consumer_ScanPreviousTrack, Key_F6,                 Key_F7,                   Key_F8,                   Key_F9,          Key_F10,          Key_F11,
-   Consumer_PlaySlashPause,    Consumer_ScanNextTrack, Key_LeftCurlyBracket,     Key_RightCurlyBracket,    Key_LeftBracket, Key_RightBracket, Key_F12,
-                               ___,                    Key_LeftArrow,            Key_DownArrow,            Key_UpArrow,     Key_RightArrow,   ___,
-   Key_PcApplication,          ___,                    Consumer_VolumeDecrement, Consumer_VolumeIncrement, ___,             Key_Backslash,    Key_Pipe,
+   Key_F12, Key_F6, Key_F7,               Key_F8,                Key_F9,          Key_F10,          ___,
+   ___,     ___,    Key_LeftCurlyBracket, Key_RightCurlyBracket, Key_LeftBracket, Key_RightBracket, ___,
+            ___,    Key_LeftArrow,        Key_DownArrow,         Key_UpArrow,     Key_RightArrow,   ___,
+   Key_PcApplication, ___,             Consumer_VolumeDecrement, Consumer_VolumeIncrement, ___,             Key_Backslash,    Key_Pipe,
    ___, ___, ___, Key_Enter, 
    ___),
 
@@ -268,7 +268,7 @@ void setup() {
   );
 
   // Disable sticky one shot modifiers
-  //OneShot.double_tap_sticky = false;
+  OneShot.double_tap_sticky = false;
 
   // While we hope to improve this in the future, the NumLock plugin
   // needs to be explicitly told which keymap layer is your numpad layer
