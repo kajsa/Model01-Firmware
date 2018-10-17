@@ -26,6 +26,12 @@
 // Support for highlighting active modifiers.
 #include "Kaleidoscope-LED-ActiveModColor.h"
 
+// Support for "Numpad" mode, which is mostly just the Numpad specific LED mode
+#include "Kaleidoscope-NumPad.h"
+
+// Support for an "LED off mode"
+#include "LED-Off.h"
+
 // Support for the "Boot greeting" effect, which pulses the 'LED' button for 10s
 // when the keyboard is connected to a computer (or that computer is powered on)
 #include "Kaleidoscope-LEDEffect-BootGreeting.h"
@@ -36,11 +42,23 @@
 // Support for an LED mode that lights up the keys as you press them
 #include "Kaleidoscope-LED-Stalker.h"
 
+// Support for LED modes that set all LEDs to a single color
+#include "Kaleidoscope-LEDEffect-SolidColor.h"
+
 // Support for Keyboardio's internal keyboard testing mode
 #include "Kaleidoscope-Model01-TestMode.h"
 
 // Support for OneShot modifiers...
 #include "Kaleidoscope-OneShot.h"
+
+// Support for host power management (suspend & wakeup)
+#include "Kaleidoscope-HostPowerManagement.h"
+
+// Support for magic combos (key chords that trigger an action)
+#include "Kaleidoscope-MagicCombo.h"
+
+// Support for USB quirks, like changing the key state report protocol
+#include "Kaleidoscope-USB-Quirks.h"
 
 /** This 'enum' is a list of all the macros used by the Model 01's firmware
   * The names aren't particularly important. What is important is that each
@@ -112,9 +130,9 @@ const Key keymaps[][ROWS][COLS] PROGMEM = {
   [DVORAK] = KEYMAP_STACKED
   (___,          Key_1,         Key_2,     Key_3,      Key_4, Key_5, Key_LEDEffectNext,
    Key_Backtick, Key_Quote,     Key_Comma, Key_Period, Key_P, Key_Y, Key_Tab,
-   Key_Home,   Key_A,         Key_O,     Key_E,      Key_U, Key_I,
-   Key_End, Key_Semicolon, Key_Q,     Key_J,      Key_K, Key_X, Key_Escape,
-   Key_Backspace, OSM(LeftShift), OSM(LeftGui), OSM(LeftAlt),
+   Key_Home,     Key_A,         Key_O,     Key_E,      Key_U, Key_I,
+   Key_End,      Key_Semicolon, Key_Q,     Key_J,      Key_K, Key_X, Key_Escape,
+   Key_Backspace, OSM(LeftShift), OSM(LeftAlt), OSM(LeftControl),
    ShiftToLayer(FUNCTION),
 
    Key_RightAlt, Key_6, Key_7, Key_8, Key_9, Key_0, Key_CapsLock,
@@ -126,31 +144,31 @@ const Key keymaps[][ROWS][COLS] PROGMEM = {
 
   [FUNCTION] =  KEYMAP_STACKED
   (___,      Key_F1,          Key_F2,        Key_F3,         Key_F4,        Key_F5,           Key_F11,
-   Key_Tab,  Key_mouseBtnR,   Key_Insert,    Key_mouseUp,    ___,           Key_mouseWarpEnd, Key_mouseWarpNE,
-   Key_PageUp, Key_mouseBtnL, Key_mouseL,    Key_mouseDn,    Key_mouseR,    Key_mouseWarpNW,
-   Key_PageDown, Key_mouseBtnM, Key_PrintScreen, Key_ScrollLock, Key_Pause, Key_mouseWarpSW,  Key_mouseWarpSE,
+   Key_Tab,      Key_mouseBtnR, Key_Insert,    Key_mouseUp,    Key_PrintScreen, Key_mouseWarpEnd, Key_mouseWarpNE,
+   Key_PageUp,   Key_mouseBtnL, Key_mouseL,    Key_mouseDn,    Key_mouseR,      Key_mouseWarpNW,
+   Key_PageDown, Key_mouseBtnM, Key_mouseBtnR, Key_ScrollLock, Key_Pause,       Key_mouseWarpSW,  Key_mouseWarpSE,
    Key_Delete, ___, ___, ___,
    ___,
 
-   Key_F12, Key_F6, Key_F7,               Key_F8,                Key_F9,          Key_F10,          ___,
+   Key_F12, Key_F6, Key_F7,               Key_F8,                Key_F9,          Key_F10,          LockLayer(NUMPAD),
    ___,     ___,    Key_LeftCurlyBracket, Key_RightCurlyBracket, Key_LeftBracket, Key_RightBracket, ___,
             ___,    Key_LeftArrow,        Key_DownArrow,         Key_UpArrow,     Key_RightArrow,   ___,
-   Key_PcApplication, ___,             Consumer_VolumeDecrement, Consumer_VolumeIncrement, ___,             Key_Backslash,    Key_Pipe,
+   Key_PcApplication, ___, Consumer_VolumeDecrement, Consumer_VolumeIncrement, ___, Key_Backslash, Key_Pipe,
    ___, ___, ___, Key_Enter, 
    ___),
 
   [NUMPAD] =  KEYMAP_STACKED
   (___, ___, ___, ___, ___, ___, ___,
-   ___, ___, ___, ___, ___, ___, ___,
-   ___, ___, ___, ___, ___, ___,
+   ___, ___, ___, Key_UpArrow, ___, ___, ___,
+   ___, ___, Key_LeftArrow, Key_DownArrow,  Key_RightArrow, ___,
    ___, ___, ___, ___, ___, ___, ___,
    ___, ___, ___, ___,
    ___,
 
-   M(MACRO_VERSION_INFO),  ___, Key_Keypad7, Key_Keypad8,   Key_Keypad9,        Key_KeypadSubtract, Key_KeypadNumLock,
-   ___,                    ___, Key_Keypad4, Key_Keypad5,   Key_Keypad6,        Key_KeypadAdd,      ___,
-                           ___, Key_Keypad1, Key_Keypad2,   Key_Keypad3,        Key_Equals,         Key_Quote,
-   ___,                    ___, Key_Keypad0, Key_KeypadDot, Key_KeypadMultiply, Key_KeypadDivide,   Key_Enter,
+   M(MACRO_VERSION_INFO), ___, Key_Keypad7, Key_Keypad8,   Key_Keypad9, ___,                Key_KeypadNumLock,
+   ___,                   ___, Key_Keypad4, Key_Keypad5,   Key_Keypad6, Key_KeypadMultiply, Key_KeypadDivide,
+                          ___, Key_Keypad1, Key_Keypad2,   Key_Keypad3, Key_KeypadAdd,      Key_KeypadSubtract,
+   Key_Enter,             ___, Key_Keypad0, Key_KeypadDot, ___,         ___,                Key_Equals,
    ___, ___, ___, ___,
    ___),
 
@@ -233,46 +251,134 @@ const macro_t *macroAction(uint8_t macroIndex, uint8_t keyState) {
   * Kaleidoscope and any plugins.
   */
 
+// These 'solid' color effect definitions define a rainbow of
+// LED color modes calibrated to draw 500mA or less on the
+// Keyboardio Model 01.
+static kaleidoscope::LEDSolidColor solidRed(160, 0, 0);
+
+/** toggleLedsOnSuspendResume toggles the LEDs off when the host goes to sleep,
+ * and turns them back on when it wakes up.
+ */
+void toggleLedsOnSuspendResume(kaleidoscope::HostPowerManagement::Event event) {
+  switch (event) {
+  case kaleidoscope::HostPowerManagement::Suspend:
+    LEDControl.paused = true;
+    LEDControl.set_all_leds_to({0, 0, 0});
+    LEDControl.syncLeds();
+    break;
+  case kaleidoscope::HostPowerManagement::Resume:
+    LEDControl.paused = false;
+    LEDControl.refreshAll();
+    break;
+  case kaleidoscope::HostPowerManagement::Sleep:
+    break;
+  }
+}
+
+/** hostPowerManagementEventHandler dispatches power management events (suspend,
+ * resume, and sleep) to other functions that perform action based on these
+ * events.
+ */
+void hostPowerManagementEventHandler(kaleidoscope::HostPowerManagement::Event event) {
+  toggleLedsOnSuspendResume(event);
+}
+
+/** This 'enum' is a list of all the magic combos used by the Model 01's
+ * firmware The names aren't particularly important. What is important is that
+ * each is unique.
+ *
+ * These are the names of your magic combos. They will be used by the
+ * `USE_MAGIC_COMBOS` call below.
+ */
+enum {
+  // Toggle between Boot (6-key rollover; for BIOSes and early boot) and NKRO
+  // mode.
+  COMBO_TOGGLE_NKRO_MODE
+};
+
+/** A tiny wrapper, to be used by MagicCombo.
+ * This simply toggles the keyboard protocol via USBQuirks, and wraps it within
+ * a function with an unused argument, to match what MagicCombo expects.
+ */
+static void toggleKeyboardProtocol(uint8_t combo_index) {
+  USBQuirks.toggleKeyboardProtocol();
+}
+
+/** Magic combo list, a list of key combo and action pairs the firmware should
+ * recognise.
+ */
+USE_MAGIC_COMBOS({.action = toggleKeyboardProtocol,
+                  // Left Fn + Esc + Shift
+                  .keys = { R3C6, R2C6, R3C7 }
+                 });
+
+// First, tell Kaleidoscope which plugins you want to use.
+// The order can be important. For example, LED effects are
+// added in the order they're listed here.
+KALEIDOSCOPE_INIT_PLUGINS(
+  // The boot greeting effect pulses the LED button for 10 seconds after the keyboard is first connected
+  BootGreetingEffect,
+
+  // The hardware test mode, which can be invoked by tapping Prog, LED and the left Fn button at the same time.
+  TestMode,
+
+  // LEDControl provides support for other LED modes
+  LEDControl,
+
+  // We start with the LED effect that turns off all the LEDs.
+  LEDOff,
+  OneShot,
+
+  // The rainbow effect changes the color of all of the keyboard's keys at the same time
+  // running through all the colors of the rainbow.
+  LEDRainbowEffect,
+
+  // The rainbow wave effect lights up your keyboard with all the colors of a rainbow
+  // and slowly moves the rainbow across your keyboard
+  LEDRainbowWaveEffect,
+
+  // These static effects turn your keyboard's LEDs a variety of colors
+  solidRed, 
+
+  // The stalker effect lights up the keys you've pressed recently
+  StalkerEffect,
+
+  // The numpad plugin is responsible for lighting up the 'numpad' mode
+  // with a custom LED effect
+  NumPad,
+
+  // The macros plugin adds support for macros
+  Macros,
+
+  // The MouseKeys plugin lets you add keys to your keymap which move the mouse.
+  MouseKeys,
+
+  // The HostPowerManagement plugin allows us to turn LEDs off when then host
+  // goes to sleep, and resume them when it wakes up.
+  HostPowerManagement,
+
+  // The MagicCombo plugin lets you use key combinations to trigger custom
+  // actions - a bit like Macros, but triggered by pressing multiple keys at the
+  // same time.
+  MagicCombo,
+
+  // The USBQuirks plugin lets you do some things with USB that we aren't
+  // comfortable - or able - to do automatically, but can be useful
+  // nevertheless. Such as toggling the key report protocol between Boot (used
+  // by BIOSes) and Report (NKRO).
+  USBQuirks
+);
+
 void setup() {
   // First, call Kaleidoscope's internal setup function
   Kaleidoscope.setup();
-
-  // Next, tell Kaleidoscope which plugins you want to use.
-  // The order can be important. For example, LED effects are
-  // added in the order they're listed here.
-  Kaleidoscope.use(
-    // The boot greeting effect pulses the LED button for 10 seconds after the keyboard is first connected
-    &BootGreetingEffect,
-
-    // The hardware test mode, which can be invoked by tapping Prog, LED and the left Fn button at the same time.
-    &TestMode,
-
-    // LEDControl provides support for other LED modes
-    &LEDControl,
-
-    // The rainbow wave effect lights up your keyboard with all the colors of a rainbow
-    // and slowly moves the rainbow across your keyboard
-    &LEDRainbowWaveEffect,
-
-    // The macros plugin adds support for macros
-    &Macros,
-
-    // OneShot allows chaining of modifiers in addition to chording them
-    &OneShot,
-
-    // The MouseKeys plugin lets you add keys to your keymap which move the mouse.
-    &MouseKeys,
-    
-    // This makes it clear which modifiers are active
-    &ActiveModColorEffect
-  );
 
   // Disable sticky one shot modifiers
   OneShot.double_tap_sticky = false;
 
   // While we hope to improve this in the future, the NumLock plugin
   // needs to be explicitly told which keymap layer is your numpad layer
-  NumLock.numPadLayer = NUMPAD;
+  NumPad.numPadLayer = NUMPAD;
 
   // We set the brightness of the rainbow effects to 150 (on a scale of 0-255)
   // This draws more than 500mA, but looks much nicer than a dimmer effect
