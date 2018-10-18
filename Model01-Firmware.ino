@@ -132,7 +132,7 @@ const Key keymaps[][ROWS][COLS] PROGMEM = {
    Key_Backtick, Key_Quote,     Key_Comma, Key_Period, Key_P, Key_Y, Key_Tab,
    Key_Home,     Key_A,         Key_O,     Key_E,      Key_U, Key_I,
    Key_End,      Key_Semicolon, Key_Q,     Key_J,      Key_K, Key_X, Key_Escape,
-   Key_Backspace, OSM(LeftShift), OSM(LeftAlt), OSM(LeftControl),
+   Key_Backspace, OSM(LeftShift), OSM(LeftGui), OSM(LeftAlt), 
    ShiftToLayer(FUNCTION),
 
    Key_RightAlt, Key_6, Key_7, Key_8, Key_9, Key_0, Key_CapsLock,
